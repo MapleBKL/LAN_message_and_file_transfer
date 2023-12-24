@@ -1,2 +1,3 @@
 build*/
-*.pro.user
+Server/Server.pro.user
+Client/Client.pro.user
