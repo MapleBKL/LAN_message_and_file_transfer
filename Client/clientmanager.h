@@ -19,6 +19,7 @@ public:
     explicit ClientManager(QHostAddress ip, ushort port, QObject* parent = nullptr);
     void connectToServer();
     void disconnectFromServer();
+    bool isConnected();
     void sendMessage(QString message);
     void sendIsTyping();
     void sendName(QString name);

@@ -27,9 +27,11 @@ private slots:
     void on_status_combo_box_currentIndexChanged(int index);
     void onTyping();
 
+    void handleConnected();
+    void handleDisconnected();
+
 private:
     Ui::MainWindow* ui;
-    ClientManager* _client_manager;
-    bool is_connected;
+    ClientManager*  _client_manager;
 };
 #endif // MAINWINDOW_H

@@ -7,7 +7,7 @@ ClientChatWidget::ClientChatWidget(QTcpSocket* client, QWidget* parent)
 {
     ui->setupUi(this);
     _client = new ClientManager(client, this);
-    ui->message_list->append(QString("<font color='green' size='1'>%1</font>").arg("CONNECTION ESTABLISHED"));
+    ui->message_list->append(QString("<font color='green' size='1'><em><strong>%1</strong></em></font>").arg("CONNECTION ESTABLISHED"));
     connect(_client, &ClientManager::disconnected, this, &ClientChatWidget::clientDisconnected);
     connect(_client, &ClientManager::messageReceived, this, &ClientChatWidget::messageReceived);
     connect(_client, &ClientManager::otherSideisTyping, this, &ClientChatWidget::onTyping);
@@ -28,12 +28,13 @@ void ClientChatWidget::on_btn_send_clicked()
     _client->sendMessage(message);
     ui->message_list->append(QString("<font size='1'>%1</font>").arg(QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss")));
     ui->message_list->append(message);
+    ui->message_list->append("");
     ui->message_text->setText("");
 }
 
 void ClientChatWidget::clientDisconnected()
 {
-    ui->message_list->append(QString("<font color='red' size='1'>%1</font>").arg("CONNECTION TERMINATED"));
+    ui->message_list->append(QString("<font color='red' size='1'><em><strong>%1</strong></em></font>").arg("CONNECTION TERMINATED"));
     ui->widget_send->setEnabled(false);
 }
 
@@ -41,6 +42,7 @@ void ClientChatWidget::messageReceived(QString message)
 {
     ui->message_list->append(QString("<font size='1'>%1</font>").arg(QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss")));
     ui->message_list->append(message);
+    ui->message_list->append("");
 }
 
 void ClientChatWidget::nameChanged(QString name)

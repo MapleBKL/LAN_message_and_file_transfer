@@ -21,6 +21,11 @@ void ClientManager::disconnectFromServer()
     _client->disconnectFromHost();
 }
 
+bool ClientManager::isConnected()
+{
+    return _client->state() == QAbstractSocket::ConnectedState;
+}
+
 void ClientManager::sendMessage(QString message)
 {
     _client->write(_protocol.textMessage(message));
