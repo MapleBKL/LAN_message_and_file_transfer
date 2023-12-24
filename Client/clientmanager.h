@@ -19,6 +19,7 @@ private:
     void uploadFile();
 
 public:
+    explicit ClientManager(QObject* parent = nullptr);
     explicit ClientManager(QHostAddress ip, ushort port, QObject* parent = nullptr);
 
     void connectToServer();
@@ -33,6 +34,14 @@ public:
     void sendRequestUpload(QString filename);
     void sendAcceptUpload();
     void sendRejectUpload();
+
+    // getter and setter for ip
+    QHostAddress ip() const;
+    void setIp(const QHostAddress &newIp);
+
+    // getter and setter for port
+    ushort port() const;
+    void setPort(ushort newPort);
 
 signals:
     void connected();

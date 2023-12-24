@@ -1,5 +1,14 @@
 #include "clientmanager.h"
 
+ClientManager::ClientManager(QObject *parent)
+    : QObject{parent}
+{
+    _client = new QTcpSocket(this);
+    connect(_client, &QTcpSocket::connected, this, &ClientManager::connected);
+    connect(_client, &QTcpSocket::disconnected, this, &ClientManager::disconnected);
+    connect(_client, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
+}
+
 ClientManager::ClientManager(QHostAddress ip, ushort port, QObject* parent)
     : QObject{parent},
     _ip(ip),
@@ -9,6 +18,26 @@ ClientManager::ClientManager(QHostAddress ip, ushort port, QObject* parent)
     connect(_client, &QTcpSocket::connected, this, &ClientManager::connected);
     connect(_client, &QTcpSocket::disconnected, this, &ClientManager::disconnected);
     connect(_client, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
+}
+
+QHostAddress ClientManager::ip() const
+{
+    return _ip;
+}
+
+void ClientManager::setIp(const QHostAddress &newIp)
+{
+    _ip = newIp;
+}
+
+ushort ClientManager::port() const
+{
+    return _port;
+}
+
+void ClientManager::setPort(ushort newPort)
+{
+    _port = newPort;
 }
 
 void ClientManager::uploadFile()

@@ -27,6 +27,7 @@ signals:
     void clientNameChanged(QString name);
     void clientStatusChanged(MessageProtocol::Status status);
     void clientIsTyping(QString name);
+    void disconnected();
 
 private slots:
     void on_btn_send_clicked();

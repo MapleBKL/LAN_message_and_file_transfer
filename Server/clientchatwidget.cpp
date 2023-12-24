@@ -7,7 +7,7 @@ ClientChatWidget::ClientChatWidget(QTcpSocket* client, QWidget* parent)
 {
     ui->setupUi(this);
     _client = new ClientManager(client, this);
-    ui->message_list->append(QString("<font color='green' size='1'><em><strong>%1</strong></em></font>").arg("CONNECTION ESTABLISHED"));
+    ui->message_list->insertHtml(QString("<font color='green' size='1.5'><strong>%1</strong></font><br>").arg("CONNECTION ESTABLISHED"));
     connect(_client, &ClientManager::disconnected, this, &ClientChatWidget::clientDisconnected);
     connect(_client, &ClientManager::messageReceived, this, &ClientChatWidget::messageReceived);
     connect(_client, &ClientManager::otherSideisTyping, this, &ClientChatWidget::onTyping);
@@ -26,25 +26,29 @@ ClientChatWidget::~ClientChatWidget()
 void ClientChatWidget::on_btn_send_clicked()
 {
     // messages sent by the server are coloured blue
-    auto message = QString("<font color='blue'>%1</font>").arg(ui->message_text->text().trimmed());
-    _client->sendMessage(message);
-    ui->message_list->append(QString("<font size='1'>%1</font>").arg(QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss")));
-    ui->message_list->append(message);
-    ui->message_list->append("");
-    ui->message_text->setText("");
+    auto message = QString(ui->message_text->text().trimmed());
+    if (message != "")
+    {
+        _client->sendMessage(message);
+        QString timestamp = QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss");
+        QString msg = QString("<font size='1'>%1</font><br>%2<br>").arg(timestamp, message);
+        ui->message_list->insertHtml(msg);
+        ui->message_text->setText("");
+    }
 }
 
 void ClientChatWidget::clientDisconnected()
 {
-    ui->message_list->append(QString("<font color='red' size='1'><em><strong>%1</strong></em></font>").arg("CONNECTION TERMINATED"));
+    ui->message_list->insertHtml(QString("<font color='red' size='1.5'><strong>%1</strong></font>").arg("CONNECTION TERMINATED"));
     ui->widget_send->setEnabled(false);
+    emit disconnected();
 }
 
 void ClientChatWidget::messageReceived(QString message)
 {
-    ui->message_list->append(QString("<font size='1'>%1</font>").arg(QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss")));
-    ui->message_list->append(message);
-    ui->message_list->append("");
+    QString timestamp = QDateTime::currentDateTime().toString("MM/dd/yyyy (ddd)  hh:mm:ss");
+    QString msg = QString("<font size='1'>%1</font><br>%2<br>").arg(timestamp, message);
+    ui->message_list->insertHtml(msg);
 }
 
 void ClientChatWidget::nameChanged(QString name)

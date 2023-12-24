@@ -24,6 +24,7 @@ void MainWindow::newClientConnected(QTcpSocket* client)
     ui->message_tabs->addTab(chatWidget, QString("Client_%1").arg(id));
     ui->message_tabs->setTabIcon(ui->message_tabs->indexOf(chatWidget), QIcon(":/icons/available.png"));
 
+    connect(chatWidget, &ClientChatWidget::disconnected, this, &MainWindow::onWidgetDisconnected);
     connect(chatWidget, &ClientChatWidget::clientNameChanged, this, &MainWindow::setClientName);
     connect(chatWidget, &ClientChatWidget::clientStatusChanged, this, &MainWindow::setClientStatus);
     connect(chatWidget, &ClientChatWidget::clientIsTyping, this, [this](QString name) {
@@ -35,6 +36,14 @@ void MainWindow::clientDisconnected(QTcpSocket* client)
 {
     auto id = client->property("id").toInt();
     ui->client_list->addItem(QString("Disconnected: %1").arg(id));
+}
+
+void MainWindow::onWidgetDisconnected()
+{
+    auto widget = qobject_cast<QWidget*>(sender());
+    auto index = ui->message_tabs->indexOf(widget);
+    auto icon = QIcon(":/icons/offline.png");
+    ui->message_tabs->setTabIcon(index, icon);
 }
 
 void MainWindow::setupServerManager()

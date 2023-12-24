@@ -32,6 +32,7 @@ public:
 private slots:
     void newClientConnected(QTcpSocket* client);
     void clientDisconnected(QTcpSocket* client);
+    void onWidgetDisconnected();
     void on_btn_listen_clicked();
     void setClientName(QString name);
     void setClientStatus(MessageProtocol::Status status);

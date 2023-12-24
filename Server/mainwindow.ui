@@ -50,7 +50,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>58</width>
+          <width>25</width>
           <height>20</height>
          </size>
         </property>
@@ -65,9 +65,15 @@
       </item>
       <item>
        <widget class="QLineEdit" name="port_line">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>16777215</height>
          </size>
         </property>
@@ -88,6 +94,24 @@
       </item>
       <item>
        <widget class="QPushButton" name="btn_listen">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -136,7 +160,7 @@
      <x>0</x>
      <y>0</y>
      <width>741</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

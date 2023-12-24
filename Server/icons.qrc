@@ -3,5 +3,6 @@
         <file>icons/available.png</file>
         <file>icons/away.png</file>
         <file>icons/busy.png</file>
+        <file>icons/offline.png</file>
     </qresource>
 </RCC>
