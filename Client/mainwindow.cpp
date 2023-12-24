@@ -62,9 +62,6 @@ void MainWindow::on_btn_connect_clicked()
         connect(ui->message_text, &QLineEdit::textChanged, _client_manager, &ClientManager::sendIsTyping);
 
         _client_manager->connectToServer();
-        // ui->message_list->append(QString("<font color='red' size='1'>%1</font>").arg("CONNECTION ERROR"));
-        // delete _client_manager;
-        // _client_manager = nullptr;
     }
     else
     {
