@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMessageBox>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -61,6 +63,9 @@ void MainWindow::on_btn_connect_clicked()
         connect(_client_manager, &ClientManager::otherSideisTyping, this, &MainWindow::onTyping);
         connect(ui->message_text, &QLineEdit::textChanged, _client_manager, &ClientManager::sendIsTyping);
 
+        connect(_client_manager, &ClientManager::fileRequestReceived, this, &MainWindow::handleFileRequest);
+        connect(_client_manager, &ClientManager::fileRejected, this, &MainWindow::handleFileRejection);
+
         _client_manager->connectToServer();
     }
     else
@@ -78,6 +83,25 @@ void MainWindow::on_status_combo_box_currentIndexChanged(int index)
 void MainWindow::onTyping()
 {
     statusBar()->showMessage("Server is typing...", 750);
+}
+
+void MainWindow::handleFileRequest(QString username, QString filename, qint64 filesize)
+{
+    auto message = QString("%1 is trying to upload a file. Accept?\nFile name: %2\nFile size: %3 Bytes").arg(username, filename).arg(filesize);
+    auto decision = QMessageBox::question(this, "Incoming File", message);
+    if (decision == QMessageBox::Yes)
+    {
+        _client_manager->sendAcceptUpload();
+    }
+    else
+    {
+        _client_manager->sendRejectUpload();
+    }
+}
+
+void MainWindow::handleFileRejection()
+{
+    QMessageBox::critical(this, "Unsuccessful", "The server declined your file upload request.");
 }
 
 void MainWindow::handleConnected()
@@ -98,3 +122,10 @@ void MainWindow::handleDisconnected()
     _client_manager = nullptr;
     ui->btn_connect->setText("connect");
 }
+
+void MainWindow::on_btn_upload_clicked()
+{
+    auto filename = QFileDialog::getOpenFileName(this, "Select a file", "/home");
+    _client_manager->sendRequestUpload(filename);
+}
+

@@ -10,20 +10,29 @@ class ClientManager : public QObject
 {
     Q_OBJECT
 private:
-    QTcpSocket* _client;
-    QHostAddress _ip;
-    ushort _port;
+    QTcpSocket*     _client;
+    QHostAddress    _ip;
+    ushort          _port;
     MessageProtocol _protocol;
+    QString         _temp_filename;
+
+    void uploadFile();
 
 public:
     explicit ClientManager(QHostAddress ip, ushort port, QObject* parent = nullptr);
+
     void connectToServer();
     void disconnectFromServer();
     bool isConnected();
+
     void sendMessage(QString message);
     void sendIsTyping();
     void sendName(QString name);
     void sendStatus(MessageProtocol::Status status);
+
+    void sendRequestUpload(QString filename);
+    void sendAcceptUpload();
+    void sendRejectUpload();
 
 signals:
     void connected();
@@ -33,6 +42,9 @@ signals:
     void nameChanged(QString name);
     void statusChanged(MessageProtocol::Status status);
     void otherSideisTyping();
+    // file protocol signals
+    void fileRejected();
+    void fileRequestReceived(QString username, QString filename, qint64 filesize);
 
 private slots:
     void readyRead();

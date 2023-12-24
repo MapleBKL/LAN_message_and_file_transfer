@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QDateTime>
-#include <QInputDialog>
+#include <QFileDialog>
 #include "clientmanager.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,14 +21,19 @@ public:
     ~MainWindow();
 
 private slots:
+    void handleConnected();
+    void handleDisconnected();
+
     void messageReceived(QString message);
     void on_btn_send_clicked();
     void on_btn_connect_clicked();
     void on_status_combo_box_currentIndexChanged(int index);
     void onTyping();
 
-    void handleConnected();
-    void handleDisconnected();
+    void handleFileRequest(QString username, QString filename, qint64 filesize);
+    void handleFileRejection();
+
+    void on_btn_upload_clicked();
 
 private:
     Ui::MainWindow* ui;

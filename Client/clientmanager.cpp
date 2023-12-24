@@ -11,6 +11,11 @@ ClientManager::ClientManager(QHostAddress ip, ushort port, QObject* parent)
     connect(_client, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
 }
 
+void ClientManager::uploadFile()
+{
+    _client->write(_protocol.setUploadMessage(_temp_filename));
+}
+
 void ClientManager::connectToServer()
 {
     _client->connectToHost(_ip, _port);
@@ -46,6 +51,23 @@ void ClientManager::sendStatus(MessageProtocol::Status status)
     _client->write(_protocol.setStatusMessage(status));
 }
 
+void ClientManager::sendRequestUpload(QString filename)
+{
+    // save the filename, since we may need to upload it later (if accepted)
+    _temp_filename = filename;
+    _client->write(_protocol.setRequestUploadMessage(filename));
+}
+
+void ClientManager::sendAcceptUpload()
+{
+    _client->write(_protocol.setAcceptUploadMessage());
+}
+
+void ClientManager::sendRejectUpload()
+{
+    _client->write(_protocol.setRejectUploadMessage());
+}
+
 void ClientManager::readyRead()
 {
     auto data = _client->readAll();
@@ -56,13 +78,22 @@ void ClientManager::readyRead()
         emit messageReceived(_protocol.message());
         break;
     case MessageProtocol::SetName:
-        emit nameChanged(_protocol.name());
+        emit nameChanged(_protocol.username());
         break;
     case MessageProtocol::SetStatus:
         emit statusChanged(_protocol.status());
         break;
     case MessageProtocol::IsTyping:
         emit otherSideisTyping();
+        break;
+    case MessageProtocol::RequestUpload:
+        emit fileRequestReceived(_protocol.username(), _protocol.filename(), _protocol.filesize());
+        break;
+    case MessageProtocol::AcceptUpload:
+        uploadFile();
+        break;
+    case MessageProtocol::RejectUpload:
+        emit fileRejected();
         break;
     default:
         break;

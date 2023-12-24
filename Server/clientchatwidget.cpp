@@ -13,6 +13,8 @@ ClientChatWidget::ClientChatWidget(QTcpSocket* client, QWidget* parent)
     connect(_client, &ClientManager::otherSideisTyping, this, &ClientChatWidget::onTyping);
     connect(_client, &ClientManager::nameChanged, this, &ClientChatWidget::nameChanged);
     connect(_client, &ClientManager::statusChanged, this, &ClientChatWidget::statusChanged);
+    connect(_client, &ClientManager::fileRequestReceived, this, &ClientChatWidget::handleFileRequest);
+    connect(_client, &ClientManager::fileSaved, this, &ClientChatWidget::onFileSaved);
     connect(ui->message_text, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
 }
 
@@ -57,5 +59,25 @@ void ClientChatWidget::statusChanged(MessageProtocol::Status status)
 
 void ClientChatWidget::onTyping()
 {
-    emit clientIsTyping(_client->name());
+    emit clientIsTyping(_client->username());
+}
+
+void ClientChatWidget::handleFileRequest(QString username, QString filename, qint64 filesize)
+{
+    auto message = QString("%1 is trying to upload a file. Accept?\nFile name: %2\nFile size: %3 Bytes").arg(username, filename).arg(filesize);
+    auto decision = QMessageBox::question(this, "Incoming File", message);
+    if (decision == QMessageBox::Yes)
+    {
+        _client->sendAcceptUpload();
+    }
+    else
+    {
+        _client->sendRejectUpload();
+    }
+}
+
+void ClientChatWidget::onFileSaved(QString path)
+{
+    auto message = QString("File saved at:\n%1").arg(path);
+    QMessageBox::information(this, "Successful", message);
 }

@@ -162,6 +162,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="btn_upload">
+         <property name="text">
+          <string>Upload</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
