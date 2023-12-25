@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Client</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="logo.qrc">
+    <normaloff>:/logo/logo.png</normaloff>:/logo/logo.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -267,6 +271,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="logo.qrc"/>
+ </resources>
  <connections/>
 </ui>
