@@ -116,6 +116,7 @@ void MainWindow::handleConnected()
     ui->btn_connect->setText("Disconnect");
     if (username != "")
     {
+        setWindowTitle(QString("Client: %1").arg(username));
         _client_manager->sendName(username);
     }
 }
